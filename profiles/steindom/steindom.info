@@ -1,4 +1,4 @@
-name = Steindom Installation Profile
+name = Steindom
 description = Installs and configures a Drupal site, Steindom-style.
 core = 7.x
 dependencies[] = block
