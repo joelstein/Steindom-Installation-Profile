@@ -1,6 +1,7 @@
 name = Steindom
 description = Installs and configures a Drupal site, Steindom-style.
 core = 7.x
+
 dependencies[] = block
 dependencies[] = comment
 dependencies[] = contextual
@@ -15,3 +16,6 @@ dependencies[] = number
 dependencies[] = options
 dependencies[] = path
 dependencies[] = taxonomy
+
+dependencies[] = admin_menu
+dependencies[] = devel
