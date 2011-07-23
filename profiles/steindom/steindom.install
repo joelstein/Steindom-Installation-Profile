@@ -162,6 +162,11 @@ function steindom_install() {
   variable_set('admin_theme', 'seven');
   variable_set('node_admin_theme', '1');
 
+  // Configure date and time formats.
+  variable_set('date_format_long', 'l, F j, Y - g:ia');
+  variable_set('date_format_medium', 'D, Y/m/d - g:ia');
+  variable_set('date_format_short', 'Y/m/d - g:ia');
+
   // Configure LoginToboggan.
   variable_set('logintoboggan_login_with_email', 1);
   variable_set('logintoboggan_login_successful_message', 1);
