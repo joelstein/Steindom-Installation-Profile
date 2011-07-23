@@ -5,7 +5,7 @@
  */
 function steindom_install() {
   // Add Filtered HTML format.
-  $format = (object) array(
+  $filtered_html_format = (object) array(
     'format' => 'filtered_html',
     'name' => 'Filtered HTML',
     'weight' => 0,
@@ -32,25 +32,25 @@ function steindom_install() {
       ),
     ),
   );
-  filter_format_save($format);
+  filter_format_save($filtered_html_format);
 
   // Add Full HTML format.
-  $format = (object) array(
+  $full_html_format = (object) array(
     'format' => 'full_html',
     'name' => 'Full HTML',
     'weight' => 1,
     'filters' => array(),
   );
-  filter_format_save($format);
+  filter_format_save($full_html_format);
 
   // Add Full HTML, no WYSIWYG format.
-  $format = (object) array(
+  $full_html_no_wysiwyg_format = (object) array(
     'format' => 'full_html_no_wysiwyg',
     'name' => 'Full HTML, no WYSIWYG',
     'weight' => 2,
     'filters' => array(),
   );
-  filter_format_save($format);
+  filter_format_save($full_html_no_wysiwyg_format);
 
   // Enable system main and help blocks.
   $default_theme = variable_get('theme_default', 'bartik');
@@ -119,51 +119,6 @@ function steindom_install() {
 
   // Restrict user registration to administrators only.
   variable_set('user_register', USER_REGISTER_ADMINISTRATORS_ONLY);
-
-  // Create a "Tags" vocabulary.
-  $vocabulary = (object) array(
-    'name' => st('Tags'),
-    'description' => st('Use tags to group articles on similar topics into categories.'),
-    'machine_name' => 'tags',
-    'help' => st('Enter a comma-separated list of words to describe your content.'),
-  );
-  taxonomy_vocabulary_save($vocabulary);
-
-  // Create a "Tags" field for the Article content type.
-  field_create_field(array(
-    'field_name' => 'field_' . $vocabulary->machine_name,
-    'type' => 'taxonomy_term_reference',
-    'cardinality' => FIELD_CARDINALITY_UNLIMITED,
-    'settings' => array(
-      'allowed_values' => array(
-        array(
-          'vocabulary' => $vocabulary->machine_name,
-          'parent' => 0,
-        ),
-      ),
-    ),
-  ));
-  field_create_instance(array(
-    'field_name' => 'field_' . $vocabulary->machine_name,
-    'entity_type' => 'node',
-    'label' => 'Tags',
-    'bundle' => 'article',
-    'description' => $vocabulary->help,
-    'widget' => array(
-      'type' => 'taxonomy_autocomplete',
-      'weight' => -4,
-    ),
-    'display' => array(
-      'default' => array(
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 10,
-      ),
-      'teaser' => array(
-        'type' => 'taxonomy_term_reference_link',
-        'weight' => 10,
-      ),
-    ),
-  ));
 
   // Enable default permissions for system roles.
   $filtered_html_permission = filter_permission_name($filtered_html_format);
