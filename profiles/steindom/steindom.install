@@ -161,4 +161,10 @@ function steindom_install() {
     ->execute();
   variable_set('admin_theme', 'seven');
   variable_set('node_admin_theme', '1');
+
+  // Configure LoginToboggan.
+  variable_set('logintoboggan_login_with_email', 1);
+  variable_set('logintoboggan_login_successful_message', 1);
+  variable_set('logintoboggan_minimum_password_length', 6);
+  variable_set('site_403', 'toboggan/denied');
 }

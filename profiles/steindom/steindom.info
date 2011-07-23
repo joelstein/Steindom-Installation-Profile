@@ -19,3 +19,5 @@ dependencies[] = taxonomy
 
 dependencies[] = admin_menu
 dependencies[] = devel
+dependencies[] = globalredirect
+dependencies[] = logintoboggan
