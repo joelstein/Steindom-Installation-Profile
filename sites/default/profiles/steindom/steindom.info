@@ -1,0 +1,16 @@
+name = Steindom Installation Profile
+description = Installs and configures a Drupal site, Steindom-style.
+core = 7.x
+dependencies[] = block
+dependencies[] = contextual
+dependencies[] = help
+dependencies[] = image
+dependencies[] = list
+dependencies[] = menu
+dependencies[] = number
+dependencies[] = options
+dependencies[] = path
+dependencies[] = taxonomy
+dependencies[] = dblog
+dependencies[] = field_ui
+dependencies[] = file
