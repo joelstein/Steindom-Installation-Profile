@@ -172,4 +172,26 @@ function steindom_install() {
   variable_set('logintoboggan_login_successful_message', 1);
   variable_set('logintoboggan_minimum_password_length', 6);
   variable_set('site_403', 'toboggan/denied');
+
+  // Configure Views.
+  variable_set('views_ui_show_advanced_help_warning', 0);
+  variable_set('views_ui_show_master_display', 1);
+  variable_set('views_ui_show_advanced_column', 1);
+  variable_set('views_ui_always_live_preview', 0);
+
+  // Configure Mollom.
+  variable_set('mollom_fallback', 1);
+  variable_set('mollom_privacy_link', 0);
+
+  // Protect site-wide contact form with Mollom.
+  $mollom_form = array(
+    'form_id' => 'contact_site_form',
+    'mode' => 2,
+    'checks' => array('spam', 'profanity'),
+    'discard' => 1,
+    'enabled_fields' => array('subject', 'message'),
+    'strictness' => 'strict',
+    'module' => 'contact',
+  );
+  mollom_form_save($mollom_form);
 }
