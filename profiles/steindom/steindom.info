@@ -19,6 +19,8 @@ dependencies[] = path
 dependencies[] = taxonomy
 
 dependencies[] = admin_menu
+dependencies[] = context
+dependencies[] = context_ui
 dependencies[] = ctools
 dependencies[] = devel
 dependencies[] = globalredirect
