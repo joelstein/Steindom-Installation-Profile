@@ -282,4 +282,8 @@ function steindom_install() {
     ->execute();
   wysiwyg_profile_cache_clear();
 
+  // Configure Pathauto.
+  variable_set('pathauto_node_article_pattern', 'articles/[node:title]');
+  variable_set('pathauto_node_page_pattern', 'articles/[node:title]');
+  variable_set('pathauto_user_pattern', '');
 }
