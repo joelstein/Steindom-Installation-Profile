@@ -27,3 +27,4 @@ dependencies[] = logintoboggan
 dependencies[] = mollom
 dependencies[] = views
 dependencies[] = views_ui
+dependencies[] = wysiwyg

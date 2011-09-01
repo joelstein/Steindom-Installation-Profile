@@ -4,11 +4,29 @@
  * Implements hook_install().
  */
 function steindom_install() {
+  // Add Full HTML format.
+  $full_html_format = (object) array(
+    'format' => 'full_html',
+    'name' => 'Full HTML',
+    'weight' => 0,
+    'filters' => array(),
+  );
+  filter_format_save($full_html_format);
+
+  // Add Full HTML, no WYSIWYG format.
+  $full_html_no_wysiwyg_format = (object) array(
+    'format' => 'full_html_no_wysiwyg',
+    'name' => 'Full HTML, no WYSIWYG',
+    'weight' => 1,
+    'filters' => array(),
+  );
+  filter_format_save($full_html_no_wysiwyg_format);
+
   // Add Filtered HTML format.
   $filtered_html_format = (object) array(
     'format' => 'filtered_html',
     'name' => 'Filtered HTML',
-    'weight' => 0,
+    'weight' => 2,
     'filters' => array(
       // URL filter.
       'filter_url' => array(
@@ -33,24 +51,6 @@ function steindom_install() {
     ),
   );
   filter_format_save($filtered_html_format);
-
-  // Add Full HTML format.
-  $full_html_format = (object) array(
-    'format' => 'full_html',
-    'name' => 'Full HTML',
-    'weight' => 1,
-    'filters' => array(),
-  );
-  filter_format_save($full_html_format);
-
-  // Add Full HTML, no WYSIWYG format.
-  $full_html_no_wysiwyg_format = (object) array(
-    'format' => 'full_html_no_wysiwyg',
-    'name' => 'Full HTML, no WYSIWYG',
-    'weight' => 2,
-    'filters' => array(),
-  );
-  filter_format_save($full_html_no_wysiwyg_format);
 
   // Enable system main and help blocks.
   $default_theme = variable_get('theme_default', 'bartik');
@@ -197,4 +197,89 @@ function steindom_install() {
 
   // Configure Google Analytics to only appear for anonymous users.
   variable_set('googleanalytics_roles', array(1 => 1));
+
+  // Configure WYSIWYG to use CKEditor.
+  db_merge('wysiwyg')
+    ->key(array('format' => 'full_html'))
+    ->fields(array(
+      'editor' => 'ckeditor',
+    ))
+    ->execute();
+  $profile = array(
+    'default' => 1,
+    'user_choose' => 0,
+    'show_toggle' => 1,
+    'theme' => 'advanced',
+    'language' => 'en',
+    'buttons' => array(
+      'default' => array(
+        'Bold' => 1,
+        'Italic' => 1,
+        'Underline' => 1,
+        'Strike' => 1,
+        'JustifyLeft' => 1,
+        'JustifyCenter' => 1,
+        'JustifyRight' => 1,
+        'JustifyBlock' => 1,
+        'BulletedList' => 1,
+        'NumberedList' => 1,
+        'Outdent' => 1,
+        'Indent' => 1,
+        'Undo' => 1,
+        'Redo' => 1,
+        'Link' => 1,
+        'Unlink' => 1,
+        'Anchor' => 1,
+        'Image' => 1,
+        'TextColor' => 1,
+        'BGColor' => 1,
+        'Superscript' => 1,
+        'Subscript' => 1,
+        'Blockquote' => 1,
+        'HorizontalRule' => 1,
+        'Cut' => 1,
+        'Copy' => 1,
+        'Paste' => 1,
+        'PasteText' => 1,
+        'PasteFromWord' => 1,
+        'ShowBlocks' => 1,
+        'RemoveFormat' => 1,
+        'Format' => 1,
+        'Font' => 1,
+        'FontSize' => 1,
+        'Styles' => 1,
+        'Table' => 1,
+        'SelectAll' => 1,
+        'Find' => 1,
+        'Replace' => 1,
+        'Flash' => 1,
+      ),
+      'drupal' => array(
+        'break' => 1,
+      ),
+    ),
+    'toolbar_loc' => 'top',
+    'toolbar_align' => 'left',
+    'path_loc' => 'bottom',
+    'resizing' => 1,
+    'verify_html' => 1,
+    'preformatted' => 0,
+    'convert_fonts_to_spans' => 1,
+    'remove_linebreaks' => 0,
+    'apply_source_formatting' => 1,
+    'paste_auto_cleanup_on_paste' => 0,
+    'block_formats' => 'p,address,pre,h2,h3,h4,h5,h6,div',
+    'css_setting' => 'none',
+    'css_path' => '',
+    'css_classes' => '',
+  );
+  db_merge('wysiwyg')
+    ->key(array('format' => 'full_html'))
+    ->fields(array(
+      'editor' => 'ckeditor',
+      'settings' => serialize($profile),
+    ))
+    ->execute();
+  wysiwyg_profile_cache_clear();
+
 }
