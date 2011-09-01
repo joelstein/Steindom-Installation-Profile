@@ -19,6 +19,7 @@ dependencies[] = path
 dependencies[] = taxonomy
 
 dependencies[] = admin_menu
+dependencies[] = boost
 dependencies[] = context
 dependencies[] = context_ui
 dependencies[] = ctools

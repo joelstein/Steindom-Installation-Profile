@@ -289,4 +289,8 @@ function steindom_install() {
 
   // Disable core's "poor man's cron".
   variable_set('cron_safe_threshold', 0);
+
+  // Configure Boost (and delete auto-generated cache folder).
+  variable_set('boost_root_cache_dir', 'sites/default/files/boost');
+  file_unmanaged_delete_recursive('cache');
 }
