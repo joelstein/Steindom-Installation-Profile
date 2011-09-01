@@ -37,7 +37,14 @@ function admin_menu_tree($menu_name) {
   unset($new_map);
 
   // Retrieve dynamic menu link tree for the expansion mappings.
-  $tree_dynamic = admin_menu_tree_dynamic($expand_map);
+  // @todo Skip entire processing if initial $expand_map is empty and directly
+  //   return $tree?
+  if (!empty($expand_map)) {
+    $tree_dynamic = admin_menu_tree_dynamic($expand_map);
+  }
+  else {
+    $tree_dynamic = array();
+  }
 
   // Merge local tasks with static menu tree.
   $tree = menu_tree_all_data($menu_name);
