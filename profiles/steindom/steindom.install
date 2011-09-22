@@ -210,6 +210,14 @@ function steindom_install() {
   );
   mollom_form_save($mollom_form);
 
+  // Protect password request form with Mollom.
+  $mollom_form = array(
+    'form_id' => 'user_pass',
+    'mode' => 1,
+    'module' => 'user',
+  );
+  mollom_form_save($mollom_form);
+
   // Configure Google Analytics to only appear for anonymous users.
   variable_set('googleanalytics_roles', array(1 => 1));
 
