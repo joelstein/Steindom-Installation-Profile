@@ -302,4 +302,8 @@ function steindom_install() {
   // contact form.
   user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
   user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access site-wide contact form'));
+
+  // Configure module update notification settings.
+  variable_set('update_check_frequency', 7);
+  variable_set('update_notification_threshold', 'security');
 }
