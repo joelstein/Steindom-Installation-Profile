@@ -254,6 +254,9 @@ function steindom_install() {
         'Replace' => 1,
         'Flash' => 1,
       ),
+      'imce' => array(
+        'imce' => 1,
+      ),
       'drupal' => array(
         'break' => 1,
       ),
