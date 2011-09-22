@@ -297,4 +297,9 @@ function steindom_install() {
   // Grant anonymous and authenticated users the ability to search content.
   user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('search content'));
   user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('search content'));
+
+  // Grant anonymous and authenticated users the ability to use site-wide
+  // contact form.
+  user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
+  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access site-wide contact form'));
 }
