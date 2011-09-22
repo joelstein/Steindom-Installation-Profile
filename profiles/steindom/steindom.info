@@ -34,3 +34,5 @@ dependencies[] = token
 dependencies[] = views
 dependencies[] = views_ui
 dependencies[] = wysiwyg
+
+dependencies[] = custom
