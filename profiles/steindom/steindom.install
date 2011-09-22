@@ -342,4 +342,11 @@ function steindom_install() {
   );
   $context->condition_mode = 0;
   context_save($context);
+
+  // Configure IMCE to map User-1 profile to administrator role.
+  variable_set('imce_roles_profiles', array(
+    3 => array('public_pid' => '1'),
+    2 => array('public_pid' => 0),
+    1 => array('public_pid' => 0),
+  ));
 }
