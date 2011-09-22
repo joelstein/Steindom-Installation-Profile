@@ -9,7 +9,12 @@ function steindom_install() {
     'format' => 'full_html',
     'name' => 'Full HTML',
     'weight' => 0,
-    'filters' => array(),
+    'filters' => array(
+      // Image Resize Filter.
+      'image_resize_filter' => array(
+        'status' => 1,
+      ),
+    ),
   );
   filter_format_save($full_html_format);
 
@@ -18,7 +23,12 @@ function steindom_install() {
     'format' => 'full_html_no_wysiwyg',
     'name' => 'Full HTML, no WYSIWYG',
     'weight' => 1,
-    'filters' => array(),
+    'filters' => array(
+      // Image Resize Filter.
+      'image_resize_filter' => array(
+        'status' => 1,
+      ),
+    ),
   );
   filter_format_save($full_html_no_wysiwyg_format);
 
@@ -41,6 +51,11 @@ function steindom_install() {
       // Line break filter.
       'filter_autop' => array(
         'weight' => 2,
+        'status' => 1,
+      ),
+      // Image Resize Filter.
+      'image_resize_filter' => array(
+        'weight' => 9,
         'status' => 1,
       ),
       // HTML corrector filter.

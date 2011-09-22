@@ -27,6 +27,7 @@ dependencies[] = ctools
 dependencies[] = devel
 dependencies[] = globalredirect
 dependencies[] = googleanalytics
+dependencies[] = image_resize_filter
 dependencies[] = imce
 dependencies[] = imce_wysiwyg
 dependencies[] = libraries
