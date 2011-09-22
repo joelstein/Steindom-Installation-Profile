@@ -4,8 +4,8 @@ core = 7.x
 
 dependencies[] = block
 dependencies[] = comment
-dependencies[] = contextual
 dependencies[] = contact
+dependencies[] = contextual
 dependencies[] = dblog
 dependencies[] = field_ui
 dependencies[] = file
@@ -16,6 +16,7 @@ dependencies[] = menu
 dependencies[] = number
 dependencies[] = options
 dependencies[] = path
+dependencies[] = search
 dependencies[] = taxonomy
 
 dependencies[] = admin_menu

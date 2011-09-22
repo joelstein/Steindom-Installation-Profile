@@ -293,4 +293,8 @@ function steindom_install() {
   // Configure Boost (and delete auto-generated cache folder).
   variable_set('boost_root_cache_dir', 'sites/default/files/boost');
   file_unmanaged_delete_recursive('cache');
+
+  // Grant anonymous and authenticated users the ability to search content.
+  user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('search content'));
+  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('search content'));
 }
