@@ -27,12 +27,15 @@ dependencies[] = ctools
 dependencies[] = devel
 dependencies[] = globalredirect
 dependencies[] = googleanalytics
+dependencies[] = libraries
 dependencies[] = logintoboggan
 dependencies[] = mollom
 dependencies[] = pathauto
 dependencies[] = redirect
 dependencies[] = token
 dependencies[] = views
+dependencies[] = views_slideshow
+dependencies[] = views_slideshow_cycle
 dependencies[] = views_ui
 dependencies[] = wysiwyg
 
