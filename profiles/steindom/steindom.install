@@ -284,7 +284,7 @@ function steindom_install() {
 
   // Configure Pathauto.
   variable_set('pathauto_node_article_pattern', 'articles/[node:title]');
-  variable_set('pathauto_node_page_pattern', 'articles/[node:title]');
+  variable_set('pathauto_node_page_pattern', '[node:title]');
   variable_set('pathauto_user_pattern', '');
 
   // Disable core's "poor man's cron".
