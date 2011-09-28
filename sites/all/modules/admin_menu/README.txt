@@ -28,7 +28,7 @@ None.
 
 -- CONFIGURATION --
 
-* Configure user permissions in Administration » People » Permissions »
+* Configure user permissions in Administration Â» People Â» Permissions Â»
   admin_menu module:
 
   - access administration menu
@@ -47,8 +47,8 @@ None.
   is not displayed to a user who is not a member of a role with the "Administer
   users" permission.
 
-* Customize the menu settings in Administration » Configuration and modules »
-  Administration » Administration menu.
+* Customize the menu settings in Administration Â» Configuration and modules Â»
+  Administration Â» Administration menu.
 
 * To prevent administrative menu items from appearing twice, you may hide the
   "Management" menu block.

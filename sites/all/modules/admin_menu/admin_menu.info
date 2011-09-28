@@ -10,9 +10,9 @@ project = admin_menu
 
 files[] = tests/admin_menu.test
 
-; Information added by drupal.org packaging script on 2011-08-14
+; Information added by drupal.org packaging script on 2011-09-28
 version = "7.x-3.x-dev"
 core = "7.x"
 project = "admin_menu"
-datestamp = "1313280154"
+datestamp = "1317168131"
 
