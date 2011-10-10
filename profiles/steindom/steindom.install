@@ -373,9 +373,34 @@ function steindom_install() {
   $context->condition_mode = 0;
   context_save($context);
 
-  // Configure IMCE to map User-1 profile to administrator role.
+  // Change "Sample profile" IMCE profile to "Assets".
+  module_load_include('inc', 'imce', 'inc/imce.admin');
+  imce_update_profiles(2, array(
+    'name' => 'Assets',
+    'usertab' => 1,
+    'filesize' => '0',
+    'quota' => '0',
+    'tuquota' => '0',
+    'extensions' => '*',
+    'dimensions' => '1200x1200',
+    'filenum' => '0',
+    'directories' => array(
+      array(
+        'name' => 'assets',
+        'subnav' => 1,
+        'browse' => 1,
+        'upload' => 1,
+        'thumb' => 1,
+        'delete' => 1,
+        'resize' => 1,
+      ),
+    ),
+    'thumbnails' => array(),
+  ));
+
+  // Configure IMCE to map Assets profile to administrator role.
   variable_set('imce_roles_profiles', array(
-    3 => array('public_pid' => '1'),
+    3 => array('public_pid' => '2'),
     2 => array('public_pid' => 0),
     1 => array('public_pid' => 0),
   ));
