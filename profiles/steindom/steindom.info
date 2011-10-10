@@ -21,6 +21,7 @@ dependencies[] = taxonomy
 
 dependencies[] = admin_menu
 dependencies[] = boost
+dependencies[] = conditional_styles
 dependencies[] = context
 dependencies[] = context_ui
 dependencies[] = ctools
