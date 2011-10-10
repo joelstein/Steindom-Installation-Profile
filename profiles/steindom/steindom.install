@@ -379,4 +379,7 @@ function steindom_install() {
     2 => array('public_pid' => 0),
     1 => array('public_pid' => 0),
   ));
+
+  // Set tmp directory.
+  variable_set('file_temporary_path', '/tmp');
 }
