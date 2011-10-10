@@ -407,4 +407,9 @@ function steindom_install() {
 
   // Set tmp directory.
   variable_set('file_temporary_path', '/tmp');
+
+  // Set Steindom Starter Theme as default theme.
+  theme_enable(array('steindom_theme'));
+  variable_set('theme_default', 'steindom_theme');
+  menu_rebuild();
 }
