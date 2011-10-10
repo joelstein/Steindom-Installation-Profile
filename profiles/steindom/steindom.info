@@ -33,6 +33,7 @@ dependencies[] = imce
 dependencies[] = imce_wysiwyg
 dependencies[] = libraries
 dependencies[] = logintoboggan
+dependencies[] = menu_attributes
 dependencies[] = mollom
 dependencies[] = pathauto
 dependencies[] = redirect
