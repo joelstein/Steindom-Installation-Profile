@@ -1,0 +1,14 @@
+name = Steindom Starter Theme
+core = 7.x
+
+regions[header] = Header
+regions[highlighted] = Highlighted
+regions[help] = Help
+regions[content_top] = Content top
+regions[content] = Content
+regions[content_bottom] = Content bottom
+regions[sidebar_first] = Sidebar first
+regions[sidebar_second] = Sidebar second
+regions[footer] = Footer
+
+stylesheets-conditional[IE][all][] = css/ie.css
