@@ -310,6 +310,18 @@ ini_set('session.cookie_lifetime', 2000000);
 # $conf['theme_default'] = 'garland';
 # $conf['anonymous'] = 'Visitor';
 
+// Configure developer modules.
+$conf['admin_menu_devel_modules'] = array(
+  'context_ui',
+  'devel',
+  'devel_generate',
+  'devel_node_access',
+  'field_ui',
+  'imagecache_ui',
+  'rules_admin',
+  'views_ui',
+);
+
 /**
  * A custom theme can be set for the offline page. This applies when the site
  * is explicitly set to maintenance mode through the administration page or when
