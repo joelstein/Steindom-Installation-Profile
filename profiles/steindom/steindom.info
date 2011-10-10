@@ -26,6 +26,7 @@ dependencies[] = context
 dependencies[] = context_ui
 dependencies[] = ctools
 dependencies[] = devel
+dependencies[] = entity
 dependencies[] = globalredirect
 dependencies[] = googleanalytics
 dependencies[] = image_resize_filter
