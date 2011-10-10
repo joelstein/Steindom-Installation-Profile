@@ -125,12 +125,16 @@ function steindom_install() {
   }
 
   // Configure "Basic page".
-  // - don't promote to front page.
-  variable_set('node_options_page', array('status'));
+  // - don't promote to front page, but do create a new revision.
+  variable_set('node_options_page', array('status', 'revision'));
   // - disable comments.
   variable_set('comment_page', COMMENT_NODE_HIDDEN);
   // - don't display date and author information.
   variable_set('node_submitted_page', FALSE);
+
+  // Configure "Article".
+  // - create a new revision.
+  variable_set('node_options_article', array('status', 'promote', 'revision'));
 
   // Restrict user registration to administrators only.
   variable_set('user_register', USER_REGISTER_ADMINISTRATORS_ONLY);
