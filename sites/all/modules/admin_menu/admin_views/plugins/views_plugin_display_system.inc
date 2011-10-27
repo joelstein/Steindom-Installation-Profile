@@ -36,7 +36,7 @@ class views_plugin_display_system extends views_plugin_display {
   /**
    * Add this display's path information to Drupal's menu system.
    */
-  function execute_hook_menu($callbacks) {
+  function execute_hook_menu(&$callbacks) {
     $items = array();
 
     // Replace % with the link to our standard views argument loader
@@ -108,23 +108,42 @@ class views_plugin_display_system extends views_plugin_display {
       'load arguments'  => array($this->view->name, $this->display->id, '%index'),
     );
 
+    // Setup a list of keys on the router item for $path, which we are going to
+    // replace. Since the menu system inherits router item properties to child
+    // paths, we need to ensure that child paths do not inherit the properties
+    // for the view, but instead, get the original properties of $path.
+    $keys = array_fill_keys(array_keys($items[$path]), NULL);
+    $keys += array(
+      'file' => NULL,
+      'file path' => NULL,
+    );
+
     // Grep all callbacks for router items below the target path.
+    $num_parent_parts = count(explode('/', $path));
     $children = preg_grep('@^' . preg_quote($path, '@') . '/@', array_keys($callbacks));
+    // Ensure correct inheritance of properties on the original parent path
+    // (being replaced) to child items.
     foreach ($children as $child_path) {
-      // Only inherit properties from parent, if the child is not a default
-      // local task.
+      // Default local tasks can be skipped, since the only properties that
+      // matter for them are 'title', 'description', and 'weight'.
       if (!isset($callbacks[$child_path]['type']) || $callbacks[$child_path]['type'] != MENU_DEFAULT_LOCAL_TASK) {
-        // Add child to our stack of items to replace.
-        $items[$child_path] = $callbacks[$child_path];
-        // Ensure that the parent path really exists and inherit its
-        // properties to the child (not replacing existing properties).
-        if (isset($callbacks[$path])) {
-          $items[$child_path] += $callbacks[$path];
+        // If this is a direct child, copy original properties form parent path.
+        $num_child_parts = count(explode('/', $child_path));
+        if (isset($callbacks[$path]) && ($num_parent_parts + 1 == $num_child_parts)) {
+          // Copy properties from the parent item, which are not set on the
+          // child. The menu system would normally inherit these to the child.
+          $callbacks[$child_path] += array_intersect_key($callbacks[$path], $keys);
+          // Some properties may not be set on the original parent item, but
+          // are set on the new views parent item. The menu system would inherit
+          // these to children; prevent that by setting NULL values.
+          $callbacks[$child_path] += $keys;
         }
       }
     }
 
-    // If the path really exists, copy over its remaining properties.
+    // If the original parent path already existed, copy over its remaining
+    // properties.
+    // @todo Above inheritance code can probably be moved into this condition.
     if (isset($callbacks[$path])) {
       $items[$path] += $callbacks[$path];
     }
@@ -196,9 +215,9 @@ class views_plugin_display_system extends views_plugin_display {
           '#type' => 'textfield',
           '#description' => t('This view replaces this path on your site. You may use "%" for dynamic arguments. For example: "node/%/feed".'),
           '#default_value' => $this->get_option('path'),
-      	  '#field_prefix' => '<span dir="ltr">' . url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
-      	  '#field_suffix' => '</span>&lrm;',
-      	  '#attributes' => array('dir'=>'ltr'),
+          '#field_prefix' => '<span dir="ltr">' . url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
+          '#field_suffix' => '</span>&lrm;',
+          '#attributes' => array('dir'=>'ltr'),
         );
         break;
     }
@@ -226,5 +245,20 @@ class views_plugin_display_system extends views_plugin_display {
         $this->set_option('path', $form_state['values']['path']);
         break;
     }
+  }
+
+  function get_argument_text() {
+    return array(
+      'filter value not present' => t('When the filter value is <em>NOT</em> in the URL'),
+      'filter value present' => t('When the filter value <em>IS</em> in the URL or a default is provided'),
+      'description' => t('The contextual filter values is provided by the URL.'),
+    );
+  }
+
+  function get_pager_text() {
+    return array(
+      'items per page title' => t('Items per page'),
+      'items per page description' => t('The number of items to display per page. Enter 0 for no limit.')
+    );
   }
 }
