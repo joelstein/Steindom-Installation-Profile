@@ -11,16 +11,15 @@ define('SUCCESS_MESSAGE', 'SUCCESS<br />Expected Path: !expected_path<br />Expec
 class GlobalRedirectTestCase extends DrupalWebTestCase {
 
 
-  function setUp() {
-    // Install modules needed for this test. This could have been passed in as
-    // either a single array argument or a variable number of string arguments.
-    $modules = func_get_args();
-    if (isset($modules[0]) && is_array($modules[0])) {
-      $modules = $modules[0];
-    }
-    $modules = array_merge($modules, array('path', 'globalredirect', 'taxonomy', 'forum'));
+  function setUp(array $modules = array()) {
+    $modules[] = 'path';
+    $modules[] = 'globalredirect';
+    $modules[] = 'taxonomy';
+    $modules[] = 'forum';
     parent::setUp($modules);
-    $this->assert('pass', 'Modules Enabled: <pre>' . print_r($modules, TRUE) . '</pre>');
+
+    // Clean URLs should be enabled for testing.
+    variable_set('clean_url', 1);
 
     // Create a user
     $this->normal_user = $this->drupalCreateUser(array(
@@ -42,7 +41,7 @@ class GlobalRedirectTestCase extends DrupalWebTestCase {
     $node = $this->drupalCreateNode($node);
 
     // Create an alias for the create story path - this is used in the "redirect with permissions testing" test.
-    $path = array('source' => 'node/add/article', 'alias' => 'node-add-artice');
+    $path = array('source' => 'node/add/article', 'alias' => 'node-add-article');
     path_save($path);
 
 
@@ -53,16 +52,12 @@ class GlobalRedirectTestCase extends DrupalWebTestCase {
     );
     taxonomy_term_save($forum_term);
 
-
-
     // Create another test vocab (with a default module) - should be vocab 2?
     $vocab = (object)array(
       'name' => 'test vocab',
-      'multiple' => 0,
-      'required' => 0,
+      'machine_name' => 'test-vocab',
       'hierarchy' => 0,
       'module' => 'taxonomy',
-      'nodes' => array('page', 'story'),
     );
     taxonomy_vocabulary_save($vocab);
     $vocab = taxonomy_vocabulary_load($vocab->vid, TRUE);
@@ -357,8 +352,8 @@ class GlobalRedirectTestCaseConfigLanguages extends GlobalRedirectTestCase {
   }
 
 
-  function setUp() {
-    parent::setUp('locale', 'translation');
+  function setUp(array $modules = array()) {
+    parent::setUp(array('locale', 'translation'));
 
     $this->admin_user = $this->drupalCreateUser(array('bypass node access', 'administer nodes', 'administer languages', 'administer content types', 'administer blocks', 'access administration pages'));
     $this->drupalLogin($this->admin_user);
