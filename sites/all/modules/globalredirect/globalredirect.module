@@ -121,7 +121,7 @@ function globalredirect_init() {
     case 1 :
       // If last 2 characters of URL are /0 then trim them off
       if (drupal_substr($current_path, -2) == '/0') {
-        $current_path = rtrim($current_path, '/0');
+        $current_path = drupal_substr($current_path, 0, -2);
       }
   }
 
@@ -139,7 +139,7 @@ function globalredirect_init() {
   }
 
   // If Content Translation module is enabled then check the path is correct.
-  if ($settings['language_redirect'] && module_exists('translation') && preg_match('/node\/([0-9]+)$/', $current_path, $matches)) {
+  if ($settings['language_redirect'] && module_exists('translation') && preg_match('/node\/([0-9]+)(\/.+|)$/', $current_path, $matches)) {
     switch (variable_get('locale_language_negotiation_url_part', LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX)) {
       case LOCALE_LANGUAGE_NEGOTIATION_URL_PREFIX:
         // Check if there's a translation for the current language of the requested node...
@@ -148,7 +148,7 @@ function globalredirect_init() {
 
         // If there is, go to the translation.
         if (!empty($node_translations[$language->language]) && $node_translations[$language->language] != $matches[0]) {
-          drupal_goto($node_translations[$language->language], $options, 301);
+          globalredirect_goto($node_translations[$language->language], $options);
         }
         // If there is no translation, change the language to fit the content
         else {
@@ -160,7 +160,7 @@ function globalredirect_init() {
             // Change the global $language's prefix, to make drupal_goto()
             // follow the proper prefix
             $options['language'] = $language = $all_languages[$node->language];
-            drupal_goto('node/' . $node->nid, $options, 301);
+            globalredirect_goto('node/' . $node->nid . $matches[2], $options);
           }
         }
         break;
@@ -218,14 +218,14 @@ function globalredirect_init() {
   if ($request_path != $prefix . $alias) {
     // If it's not just a slash or user has deslash on, redirect
     if (str_replace($prefix . $alias, '', $request_path) != '/' || $settings['deslash']) {
-      drupal_goto($alias, $options, 301);
+      globalredirect_goto($alias, $options);
     }
   }
 
   // If no alias was returned, the final check is to direct non-clean to
   // clean - if clean is enabled
   if ($settings['nonclean_to_clean'] && ((bool)variable_get('clean_url', 0)) && strpos(request_uri(), '?q=')) {
-    drupal_goto($current_path, $options, 301);
+    globalredirect_goto($current_path, $options);
   }
 
   // Restore the destination from earlier so its available in other places.
@@ -236,7 +236,7 @@ function globalredirect_init() {
   // Add the canonical link to the head of the document if desired.
   // TODO - The Canonical already gets set by Core for node page views... See http://api.drupal.org/api/function/node_page_view/7
   if ($settings['canonical']) {
-     drupal_add_html_head_link(array(
+    drupal_add_html_head_link(array(
       'rel' => 'canonical',
       'href' => url(drupal_is_front_page() ? '<front>' : $request_path, array('absolute' => TRUE, 'query' => $query_string)),
     ));
@@ -246,6 +246,28 @@ function globalredirect_init() {
   if ($settings['content_location_header']) {
     drupal_add_http_header('Content-Location', url(drupal_is_front_page() ? '<front>' : $request_path, array('absolute' => TRUE, 'query' => $query_string)));
   }
+}
+
+/**
+ * A wrapper for drupal_goto() that does not pass through if $path is an
+ * external URL.
+ */
+function globalredirect_goto($path = '', array $options = array(), $http_response_code = 301) {
+  if (!globalredirect_url_is_external($path)) {
+    return drupal_goto($path, $options, $http_response_code);
+  }
+}
+
+/**
+ * Check if a path is external (e.g. http://example.com).
+ *
+ * This is a simple copy of url_is_external() which if given an URL with an
+ * invalid protocal will return FALSE, an undesired value. This function will
+ * return TRUE given an URL with an invalid protocol.
+ */
+function globalredirect_url_is_external($path) {
+  $colonpos = strpos($path, ':');
+  return $colonpos !== FALSE && !preg_match('![/?#]!', drupal_substr($path, 0, $colonpos));
 }
 
 /**
@@ -287,13 +309,6 @@ function _globalredirect_is_active($settings) {
    * If this is a command line request (Drush, etc), skip processing.
    */
   if (drupal_is_cli()) {
-    return FALSE;
-  }
-
-  /**
-   * Check if the request is an attempted url mask
-   */
-  if (strpos(request_uri(), '://') !== FALSE) {
     return FALSE;
   }
 
@@ -362,16 +377,16 @@ function _globalredirect_get_settings($default_only = FALSE) {
  * globalredirect_request_path() is borrowed from request_uri(), but it only ltrim's..
  */
 function globalredirect_request_path() {
-  if (isset($_SERVER['REQUEST_URI'])) {
+  if (request_uri()) {
     if (isset($_REQUEST['q'])) {
       $path = $_REQUEST['q'];
     }
     else {
       // This is a request using a clean URL. Extract the path from REQUEST_URI.
-      $request_path = strtok($_SERVER['REQUEST_URI'], '?');
-      $base_path_len = strlen(rtrim(dirname($_SERVER['SCRIPT_NAME']), '\/'));
+      $request_path = strtok(request_uri(), '?');
+      $base_path_len = drupal_strlen(rtrim(dirname($_SERVER['SCRIPT_NAME']), '\/'));
       // Unescape and strip $base_path prefix, leaving q without a leading slash.
-      $path = substr(urldecode($request_path), $base_path_len + 1);
+      $path = drupal_substr(urldecode($request_path), $base_path_len + 1);
     }
   }
   else {
