@@ -29,6 +29,12 @@ function steindom_finished(&$form, &$form_state) {
     ':email' => $form_state['values']['site_mail'],
   ));
 
+  // Make sure themes directory exists.
+  chmod('sites/default', 0775);
+  $destination = 'sites/default/themes';
+  file_prepare_directory($destination, FILE_CREATE_DIRECTORY);
+  chmod('sites/default', 0555);
+
   // Clone Omega starter theme.
   $theme = $form_state['values']['theme_name'];
   $source = 'sites/all/themes/omega/starterkits/omega-html5';
