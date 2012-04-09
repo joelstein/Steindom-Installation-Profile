@@ -17,8 +17,8 @@ function steindom_form_install_configure_form_alter(&$form, $form_state) {
  * Submit callback for site configuration form.
  */
 function steindom_finished(&$form, &$form_state) {
-  // // Set default contact category address to site email.
-  // db_query("UPDATE contact SET recipients = :recipients WHERE cid = 1", array(
-  //   ':recipients' => $form_state['values']['site_mail'],
-  // ));
+  // Set contact form email address to site email.
+  db_query("UPDATE {webform_emails} SET email = :email WHERE nid = 1", array(
+    ':email' => $form_state['values']['site_mail'],
+  ));
 }
