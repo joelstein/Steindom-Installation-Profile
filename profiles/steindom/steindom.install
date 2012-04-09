@@ -218,6 +218,14 @@ function steindom_install() {
   );
   mollom_form_save($mollom_form);
 
+  // Configure Menu Attributes.
+  variable_set('menu_attributes_id_enable', FALSE);
+  variable_set('menu_attributes_name_enable', FALSE);
+  variable_set('menu_attributes_rel_enable', FALSE);
+  variable_set('menu_attributes_class_enable', FALSE);
+  variable_set('menu_attributes_style_enable', FALSE);
+  variable_set('menu_attributes_accesskey_enable', FALSE);
+
   // Configure Google Analytics to only appear for anonymous users.
   variable_set('googleanalytics_roles', array(1 => 1));
 
