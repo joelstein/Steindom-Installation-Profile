@@ -20,6 +20,7 @@ dependencies[] = search
 dependencies[] = taxonomy
 
 dependencies[] = admin_menu
+dependencies[] = admin_menu_toolbar
 dependencies[] = context
 dependencies[] = context_ui
 dependencies[] = ctools
