@@ -317,8 +317,10 @@ function steindom_install() {
   wysiwyg_profile_cache_clear();
 
   // Configure Pathauto.
+  variable_set('pathauto_node_pattern', '[node:content-type]/[node:title]');
   variable_set('pathauto_node_article_pattern', 'articles/[node:title]');
   variable_set('pathauto_node_page_pattern', '[node:title]');
+  variable_set('pathauto_node_webform_pattern', '[node:title]');
   variable_set('pathauto_user_pattern', '');
 
   // Disable core's "poor man's cron".
