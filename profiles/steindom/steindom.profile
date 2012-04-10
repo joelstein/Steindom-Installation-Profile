@@ -54,6 +54,13 @@ function steindom_finished(&$form, &$form_state) {
   $data = steindom_build_info_file($info);
   file_unmanaged_save_data($data, $destination, FILE_EXISTS_REPLACE);
 
+  // Rename CSS files.
+  foreach (array('', '-narrow', '-normal', '-wide') as $part) {
+    $source = "sites/default/themes/$theme/css/YOURTHEME-alpha-default$part.css";
+    $destination = "sites/default/themes/$theme/css/$theme-alpha-default$part.css";
+    file_unmanaged_move($source, $destination);
+  }
+
   // Set new theme as default theme.
   system_rebuild_theme_data();
   theme_enable(array($theme));
