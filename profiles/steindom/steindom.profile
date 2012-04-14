@@ -16,6 +16,34 @@ function steindom_form_install_configure_form_alter(&$form, $form_state) {
     '#required' => TRUE,
   );
 
+  // Add user #2 fields.
+  $form['user2'] = array(
+    '#type' => 'fieldset',
+    '#title' => 'User #2',
+    '#tree' => TRUE,
+  );
+  $form['user2']['name'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Username',
+    '#required' => TRUE,
+    '#default_value' => 'Joel Stein',
+  );
+  $form['user2']['mail'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Email',
+    '#required' => TRUE,
+    '#default_value' => 'joel@steindom.com',
+  );
+  $form['user2']['pass'] = array(
+    '#type' => 'password',
+    '#title' => 'Password',
+    '#required' => TRUE,
+  );
+
+  // Adjust weight of other fieldsets.
+  $form['server_settings']['#weight'] = 1;
+  $form['update_notifications']['#weight'] = 2;
+
   // Add submit callback.
   $form['#submit'][] = 'steindom_finished';
 }
@@ -28,6 +56,22 @@ function steindom_finished(&$form, &$form_state) {
   db_query("UPDATE {webform_emails} SET email = :email WHERE nid = 1", array(
     ':email' => $form_state['values']['site_mail'],
   ));
+
+  // Save user #2.
+  $user2 = array(
+    'name' => $form_state['values']['user2']['name'],
+    'pass' => $form_state['values']['user2']['pass'],
+    'mail' => $form_state['values']['user2']['mail'],
+    'status' => 1,
+    'access' => REQUEST_TIME,
+    'roles' => array(3 => TRUE),
+  );
+  $account = user_save(null, $user2);
+
+  // Login user #2.
+  global $user;
+  $user = user_load($account->uid);
+  user_login_finalize();
 
   // Make sure themes directory exists.
   chmod('sites/default', 0775);
