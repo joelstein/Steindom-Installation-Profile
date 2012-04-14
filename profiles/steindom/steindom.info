@@ -20,6 +20,8 @@ dependencies[] = taxonomy
 
 dependencies[] = admin_menu
 dependencies[] = admin_menu_toolbar
+dependencies[] = ckeditor_link
+dependencies[] = ckeditor_swf
 dependencies[] = context
 dependencies[] = context_ui
 dependencies[] = ctools

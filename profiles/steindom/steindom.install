@@ -10,6 +10,16 @@ function steindom_install() {
     'name' => 'Full HTML',
     'weight' => 0,
     'filters' => array(
+      // CKEditor Link.
+      'ckeditor_link_filter' => array(
+        'status' => 1,
+        'weight' => 1,
+      ),
+      // CKEditor SWF.
+      'ckeditor_swf_filter' => array(
+        'status' => 1,
+        'weight' => 1,
+      ),
       // Image Resize Filter.
       'image_resize_filter' => array(
         'status' => 1,
@@ -304,6 +314,12 @@ function steindom_install() {
       ),
       'imce' => array(
         'imce' => 1,
+      ),
+      'swf' => array(
+        'Flash' => 1,
+      ),
+      'drupal_path' => array(
+        'Link' => 1,
       ),
       'drupal' => array(
         'break' => 1,
