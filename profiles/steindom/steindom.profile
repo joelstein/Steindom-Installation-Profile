@@ -40,6 +40,18 @@ function steindom_form_install_configure_form_alter(&$form, $form_state) {
     '#required' => TRUE,
   );
 
+  // Add Pathologic local paths field, and set defaults for my usual Prod,
+  // Staging, and Dev URL conventions.
+  global $base_url;
+  $prod = preg_replace('/dev$/', 'com', $base_url);
+  $staging = preg_replace('/^http:\/\//', 'http://staging.', $prod);
+  $form['server_settings']['pathologic_local_paths'] = array(
+    '#type' => 'textarea',
+    '#title' => 'Pathologic local paths',
+    '#default_value' => "$prod/\n$staging/\n$base_url/\n/",
+    '#weight' => -1,
+  );
+
   // Adjust weight of other fieldsets.
   $form['server_settings']['#weight'] = 1;
   $form['update_notifications']['#weight'] = 2;
@@ -72,6 +84,18 @@ function steindom_finished(&$form, &$form_state) {
   global $user;
   $user = user_load($account->uid);
   user_login_finalize();
+
+  // Save Pathologic local paths in text formats.
+  foreach (array('full_html', 'full_html_no_wysiwyg', 'filtered_html') as $format_id) {
+    if ($format = filter_format_load($format_id)) {
+      $format->filters = array();
+      foreach (filter_list_format($format_id) as $filter_name => $filter) {
+        $format->filters[$filter_name] = (array) $filter;
+      }
+      $format->filters['pathologic']['settings']['local_paths'] = $form_state['values']['pathologic_local_paths'];
+      filter_format_save($format);
+    }
+  }
 
   // Make sure themes directory exists.
   chmod('sites/default', 0775);

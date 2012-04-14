@@ -38,6 +38,7 @@ dependencies[] = mollom
 dependencies[] = options_element
 dependencies[] = pathauto
 dependencies[] = pathauto_persist
+dependencies[] = pathologic
 dependencies[] = redirect
 dependencies[] = rules
 dependencies[] = rules_admin

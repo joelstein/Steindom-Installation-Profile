@@ -1,0 +1,258 @@
+<?php
+
+/**
+ * @file
+ * Pathologic text filter for Drupal.
+ *
+ * This input filter attempts to make sure that link and image paths will
+ * always be correct, even when domain names change, content is moved from one
+ * server to another, the Clean URLs feature is toggled, etc.
+ *
+ * @TODO: Removing "old" base paths currently does not work. For example, if
+ * "/banana" is in the "All base paths" field and Pathologic encounters a path
+ * of "/banana/foo", it will not strip off the "banana."
+ */
+
+/**
+ * Implements hook_filter_info().
+ */
+function pathologic_filter_info() {
+  return array(
+    'pathologic' => array(
+      'title' => t('Correct URLs with Pathologic'),
+      'process callback' => '_pathologic_filter',
+      'settings callback' => '_pathologic_settings',
+      'default settings' => array(
+        'local_paths' => '',
+        'absolute' => TRUE,
+      ),
+      'weight' => 65535,
+    )
+  );
+}
+
+/**
+ * Settings callback for Pathologic.
+ */
+function _pathologic_settings($form, &$form_state, $filter, $format, $defaults) {
+  return array(
+    'reminder' => array(
+      '#type' => 'item',
+      '#title' => t('In most cases, Pathologic should be the <em>last</em> filter in the &ldquo;Filter processing order&rdquo; list.'),
+      '#weight' => -10,
+    ),
+    'absolute' => array(
+      '#type' => 'checkbox',
+      '#title' => t('Output full absolute URLs'),
+      '#default_value' => isset($filter->settings['absolute']) ? $filter->settings['absolute'] : $defaults['absolute'],
+      '#description' => t('If checked, Pathologic will output full absolute URLs, with a protocol and server fragment (such as <code>http://example.com/foo/bar</code>); this is useful if you want images and links to not break for those reading the content in a feed reader or through some other form of aggregation. However, in cases where the site is being served via both HTTP and HTTPS, it may be necessary to uncheck this box so that protocol and server fragments are omitted in the paths Pathologic creates (such as <code>/foo/bar</code>) to avoid issues where the browser complains about pages containing both secure and insecure content.'),
+      '#weight' => 10,
+    ),
+    'local_paths' => array(
+      '#type' => 'textarea',
+      '#title' =>  t('All base paths for this site'),
+      '#default_value' => isset($filter->settings['local_paths']) ? $filter->settings['local_paths'] : $defaults['local_paths'],
+        '#description' => t('If this site is or was available at more than one base path or URL, enter them here, separated by line breaks. For example, if this site is live at <code>http://example.com/</code> but has a staging version at <code>http://dev.example.org/staging/</code>, you would enter both those URLs here. If confused, please read <a href="!docs">Pathologic&rsquo;s documentation</a> for more information about this option and what it affects.', array('!docs' => 'http://drupal.org/node/257026')),
+      '#weight' => 20,
+    ),
+  );
+}
+
+/**
+ * Pathologic filter callback.
+ *
+ * @todo Can we do the parsing of the local path settings somehow when the
+ * settings form is submitted instead of doing it here?
+ */
+function _pathologic_filter($text, $filter, $format, $langcode, $cache, $cache_id) {
+  global $base_url;
+  $base_url_parts = parse_url($base_url . '/');
+  $settings = &drupal_static(__FUNCTION__, array());
+  if (!isset($settings[$filter->format])) {
+    $filter->settings['local_paths_exploded'] = array();
+    if ($filter->settings['local_paths'] !== '') {
+      $filter->settings['local_paths_array'] = array_map('trim', explode("\n", $filter->settings['local_paths']));
+      foreach ($filter->settings['local_paths_array'] as $local) {
+        $parts = parse_url($local);
+        // Okay, what the hellish if statement is doing below is checking to
+        // make sure we aren't about to add a path to our array of exploded
+        // local paths which matches the current "local" path. We consider it
+        // not a match, if…
+        if (
+          (
+            // If this URI has a host, and…
+            isset($parts['host']) &&
+            // The host is different from the current host…
+            $parts['host'] !== $base_url_parts['host']
+          ) ||
+          // Or…
+          (
+            // The URI doesn't have a host…
+            !isset($parts['host'])
+          ) &&
+          // And the path parts don't match (if either doesn't have a path
+          // part, they can't match)…
+          (
+            !isset($parts['path']) ||
+            !isset($base_url_parts['path']) ||
+            $parts['path'] !== $base_url_parts['path']
+          )
+        ) {
+        // Add it to the list.
+          $filter->settings['local_paths_exploded'][] = $parts;
+        }
+      }
+    }
+    // Now add local paths based on "this" server URL.
+    $filter->settings['local_paths_exploded'][] = array('path' => $base_url_parts['path']);
+    $filter->settings['local_paths_exploded'][] = array('path' => $base_url_parts['path'], 'host' => $base_url_parts['host']);
+
+    $settings[$filter->format] = $filter->settings;
+  }
+  $settings['langcode'] = $langcode;
+  $settings['current_settings'] = &$settings[$filter->format];
+
+  // Prepare language objects to pass to url()
+  if (!isset($settings['language_list'])) {
+    $settings['language_list'] = language_list();
+    // Add a fake "none" language for when we don't actually want to do
+    // language-based path tweaking
+    $settings['language_list'][LANGUAGE_NONE] = (object) array('language' => LANGUAGE_NONE, 'prefix' => '');
+  }
+
+  return preg_replace_callback('~(href|src|action|longdesc)="([^"]+)~i', '_pathologic_replace', $text);
+}
+
+/**
+ * Replace the attributes. preg_replace_callback() callback.
+ */
+function _pathologic_replace($matches) {
+  // Get the settings for the filter. There's basically three ways to do this:
+  // abuse eval() and friends; abuse globals; or abuse drupal_static(). The
+  // latter is the least offensive, I think.
+  $settings = drupal_static('_pathologic_filter');
+  // Now parse the URL
+  $parts = parse_url($matches[2]);
+  // Do some early tests to see if we should just give up now.
+  if (
+    // If parse_url() failed, give up.
+    $parts === FALSE ||
+    // If there's a scheme part and it doesn't look useful, bail out.
+    // "internal" is for Path Filter compatibility.
+    (isset($parts['scheme']) && !in_array($parts['scheme'], array('http', 'https', 'files', 'internal')))
+  ) {
+    // Give up by "replacing" the original with the same.
+    return $matches[0];
+  }
+
+  // Let's also bail out of this doesn't look like a local path.
+  $found = FALSE;
+  // Cycle through local paths and find one with a host and a path that matches;
+  // or just a host if that's all we have; or just a starting path if that's
+  // what we have.
+  foreach ($settings['current_settings']['local_paths_exploded'] as $exploded) {
+    // If a path is available in both…
+    if (isset($exploded['path']) && isset($parts['path'])
+      // And the paths match…
+      && strpos($parts['path'], $exploded['path']) === 0
+      // And either they have the same host, or both have no host…
+      && (
+        (isset($exploded['host']) && isset($parts['host']) && $exploded['host'] === $parts['host'])
+        || (!isset($exploded['host']) && !isset($parts['host']))
+      )
+    ) {
+      // Remove the shared path from the path. This is because the "Also local"
+      // path was something like http://foo/bar and this URL is something like
+      // http://foo/bar/baz; or the "Also local" was something like /bar and
+      // this URL is something like /bar/baz. And we only care about the /baz
+      // part.
+      $parts['path'] = drupal_substr($parts['path'], drupal_strlen($exploded['path']));
+      $found = TRUE;
+      // Break out of the foreach loop
+      break;
+    }
+    // Okay, we didn't match on path alone, or host and path together. Can we
+    // match on just host? Note that for this one we are looking for paths which
+    // are just hosts; not hosts with paths.
+    elseif ((isset($parts['host']) && !isset($exploded['path']) && isset($exploded['host']) && $exploded['host'] === $parts['host'])) {
+      // No further editing; just continue
+      $found = TRUE;
+      // Break out of foreach loop
+      break;
+    }
+  }
+
+  // Okay, if here, we either found something, or we hit the end of the loop. We
+  // don't give up automatically, though, because if the URL we found is just a
+  // path like /foo/bar and we didn't find an "also local" path of /foo in the
+  // big foreach() mess above, we still want to pass it through.
+  if (!$found && !(isset($parts['path']) && !isset($parts['host']))) {
+    return $matches[0];
+  }
+
+  // First, "files:" support. This is fairly easy.
+  if (isset($parts['scheme']) && $parts['scheme'] === 'files') {
+    // Can we create a file URL for it?
+    $file_url = file_create_url(file_build_uri($parts['path']));
+    if ($file_url) {
+      return $matches[1] . '="' . $file_url;
+    }
+    else {
+      // That didn't work. Bail out.
+      return $matches[0];
+    }
+  }
+  elseif (file_exists(realpath($parts['path']))) {
+    // Okay, they didn't use files:, but does it appear that the path is still
+    // to a real file on the disk? If so, we don't want to adjust for language.
+    // Also, skip all other tweaks.
+    $settings['langcode'] = LANGUAGE_NONE;
+  }
+
+  // Examine the query part of the URL. Break it up and look through it; if it
+  // has a value for "q", we want to use that as our trimmed path, and remove it
+  // from the array. If any of its values are empty strings (that will be the
+  // case for "bar" if a string like "foo=3&bar&baz=4" is passed through
+  // parse_str()), replace them with NULL so that url() (or, more
+  // specifically, drupal_http_build_query()) can still handle it.
+  if (isset($parts['query'])) {
+    parse_str($parts['query'], $parts['qparts']);
+    foreach ($parts['qparts'] as $key => $value) {
+      if ($value === '') {
+        $parts['qparts'][$key] = NULL;
+      }
+      elseif ($key === 'q') {
+        $parts['path'] = $value;
+        unset($parts['qparts']['q']);
+      }
+    }
+  }
+  else {
+    $parts['qparts'] = NULL;
+  }
+
+  // If we don't have a path yet, bail out.
+  if (!isset($parts['path'])) {
+    return $matches[0];
+  }
+
+  // Okay, format the URL.
+  // If there's still a slash lingering at the start of the path, chop it off.
+  // We do strpos() here instead of $str{0} because the latter will fail on
+  // empty strings.
+  if (strpos($parts['path'], '/') === 0) {
+    $parts['path'] = substr($parts['path'], 1);
+  }
+
+  $url = url(
+    $parts['path'] === '' ? '<front>' : $parts['path'],
+    array(
+      'query' => $parts['qparts'],
+      'fragment' => isset($parts['fragment']) ? $parts['fragment'] : NULL,
+      'absolute' => $settings['current_settings']['absolute'],
+      'language' => isset($settings['language_list'][$settings['langcode']]) ? $settings['language_list'][$settings['langcode']] : $settings['language_list'][LANGUAGE_NONE],
+    )
+  );
+  // $matches[1] will be the tag attribute; src, href, etc.
+  return "{$matches[1]}=\"{$url}";
+}
