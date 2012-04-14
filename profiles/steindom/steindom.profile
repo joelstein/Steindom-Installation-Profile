@@ -135,6 +135,22 @@ function steindom_finished(&$form, &$form_state) {
   variable_set('theme_default', $theme);
   system_rebuild_theme_data();
   menu_rebuild();
+
+  // Add wysiwyg.css file in theme, and update WYSIWYG profile to point to this
+  // file.
+  $contents = file_get_contents('profiles/steindom/wysiwyg.css');
+  $path = "sites/default/themes/$theme/css/wysiwyg.css";
+  file_unmanaged_save_data($contents, $path);
+  $profile = wysiwyg_profile_load('full_html');
+  $profile->settings['css_setting'] = 'self';
+  $profile->settings['css_path'] = '/' . $path;
+  db_merge('wysiwyg')
+    ->key(array('format' => 'full_html'))
+    ->fields(array(
+      'settings' => serialize($profile->settings),
+    ))
+    ->execute();
+  wysiwyg_profile_cache_clear();
 }
 
 /**
