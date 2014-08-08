@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Steindom Global feature.
+ */
+
+include_once 'steindom_global.features.inc';

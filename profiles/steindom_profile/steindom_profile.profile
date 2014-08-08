@@ -47,7 +47,7 @@ function steindom_profile_form_install_configure_form_alter(&$form, $form_state)
  */
 function steindom_profile_finished(&$form, &$form_state) {
   // Save user #2.
-  $user2 = array(
+  $edit = array(
     'name' => $form_state['values']['user2']['name'],
     'pass' => $form_state['values']['user2']['pass'],
     'mail' => $form_state['values']['user2']['mail'],
@@ -55,9 +55,10 @@ function steindom_profile_finished(&$form, &$form_state) {
     'timezone' => 'America/Chicago',
     'status' => 1,
     'access' => REQUEST_TIME,
-    'roles' => array(3 => TRUE),
+    'roles' => array(user_role_load_by_name('administrator')->rid => TRUE),
+    'data' => array('admin_select' => 'admin_menu'),
   );
-  $account = user_save(null, $user2);
+  $account = user_save(NULL, $edit);
 
   // Login user #2.
   global $user;

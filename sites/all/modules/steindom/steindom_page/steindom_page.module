@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Steindom Page feature.
+ */
+
+include_once 'steindom_page.features.inc';
