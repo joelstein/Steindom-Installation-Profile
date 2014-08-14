@@ -1,0 +1,9 @@
+.steindom-page-default {
+  font-style: italic;
+}
+
+/* Hide default message when IPE is active */
+
+.panels-ipe-editing + .steindom-page-default {
+  display: none;
+}

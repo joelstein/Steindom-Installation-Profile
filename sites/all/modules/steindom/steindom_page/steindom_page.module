@@ -5,3 +5,57 @@
  */
 
 include_once 'steindom_page.features.inc';
+
+/**
+ * Implements hook_menu_alter().
+ */
+function steindom_page_menu_alter(&$items) {
+  // Put page at top of list.
+  $items['node/add/page']['weight'] = -1;
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function steindom_page_module_implements_alter(&$implementations, $hook) {
+  // Put our hook_form_alter after other modules.
+  if ($hook == 'form_alter') {
+    $group = $implementations['steindom_page'];
+    unset($implementations['steindom_page']);
+    $implementations['steindom_page'] = $group;
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function steindom_page_form_alter(&$form, &$form_state, $form_id) {
+  // Force saving pages as custom panelizer (instead of overriding default) by
+  // hiding the buttons that Panelizer adds.
+  if (
+    $form_id == 'panels_ipe_edit_control_form'
+    && is_a($form_state['renderer'], 'panels_renderer_ipe')
+    && strpos($form_state['renderer']->display->cache_key, 'panelizer') !== FALSE
+    && $form_state['renderer']->display->context['panelizer']->type[2] == 'node'
+    && $form_state['renderer']->display->context['panelizer']->data->type == 'page'
+  ) {
+    $form['buttons']['submit']['#value'] = t('Save');
+    $form['buttons']['save_default']['#access'] = FALSE;
+    $form['buttons']['revert_default']['#access'] = FALSE;
+  }
+}
+
+/**
+ * Implements hook_panels_post_render() from Panels.
+ */
+function steindom_page_panels_post_render($panels_display, $renderer) {
+  // Show a message to page editors if the page is empty.
+  if (
+    array_key_exists('panelizer', $panels_display->context)
+    && $panels_display->context['panelizer']->data->type == 'page'
+    && empty($panels_display->panels)
+    && node_access('update', $panels_display->context['panelizer']->data)
+  ) {
+    return '<div class="steindom-page-default">' . t('Click "Customize this Page" below to add content to this page.') . '</div>';
+  }
+}

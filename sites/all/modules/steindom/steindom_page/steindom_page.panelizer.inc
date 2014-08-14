@@ -43,35 +43,8 @@ function steindom_page_panelizer_defaults() {
   $display->uuid = '71aa43f9-2a65-4d9c-86f6-7135579eb826';
   $display->content = array();
   $display->panels = array();
-    $pane = new stdClass();
-    $pane->pid = 'new-3172812d-cdac-45b9-b215-2877c59232fe';
-    $pane->panel = 'middle';
-    $pane->type = 'entity_field';
-    $pane->subtype = 'node:body';
-    $pane->shown = TRUE;
-    $pane->access = array();
-    $pane->configuration = array(
-      'label' => 'hidden',
-      'formatter' => 'text_default',
-      'delta_limit' => 0,
-      'delta_offset' => '0',
-      'delta_reversed' => FALSE,
-      'formatter_settings' => array(),
-      'context' => 'panelizer',
-    );
-    $pane->cache = array();
-    $pane->style = array(
-      'settings' => NULL,
-    );
-    $pane->css = array();
-    $pane->extras = array();
-    $pane->position = 0;
-    $pane->locks = array();
-    $pane->uuid = '3172812d-cdac-45b9-b215-2877c59232fe';
-    $display->content['new-3172812d-cdac-45b9-b215-2877c59232fe'] = $pane;
-    $display->panels['middle'][0] = 'new-3172812d-cdac-45b9-b215-2877c59232fe';
   $display->hide_title = PANELS_TITLE_FIXED;
-  $display->title_pane = 'new-3172812d-cdac-45b9-b215-2877c59232fe';
+  $display->title_pane = '0';
   $panelizer->display = $display;
   $export['node:page:default'] = $panelizer;
 
