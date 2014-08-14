@@ -1,0 +1,15 @@
+name = Subtheme
+description = A subtheme of Responsive Bartik.
+core = 7.x
+base theme = responsive_bartik
+
+stylesheets[all][] = css/styles.css
+scripts[] = js/scripts.js
+
+regions[header] = Header
+regions[content] = Content
+regions[footer] = Footer
+regions[page_top] = Page top
+regions[page_bottom] = Page bottom
+
+settings[toggle_logo] = 0
