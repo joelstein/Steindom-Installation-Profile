@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Steindom Rich Text feature.
+ */
+
+include_once 'steindom_rich_text.features.inc';
