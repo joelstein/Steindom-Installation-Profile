@@ -1,0 +1,64 @@
+<?php
+
+/**
+ * Implements hook_requirements().
+ */
+function steindom_global_requirements($phase) {
+  $requirements = array();
+
+  if ($phase == 'runtime') {
+    // Developer modules should be disabled.
+    $developer_modules = array(
+      'bean_admin_ui',
+      'context_ui',
+      'devel',
+      'devel_generate',
+      'diff',
+      'ds_devel',
+      'ds_ui',
+      'field_ui',
+      'fontyourface_ui',
+      'rules_admin',
+      'search_krumo',
+      'views_ui',
+    );
+    $enabled = array_intersect($developer_modules, module_list());
+    if (!empty($enabled)) {
+      $requirements['steindom_deploy_developer_modules'] = array(
+        'title' => t('Developer modules'),
+        'description' => t('The following developer modules are enabled, but should be disabled to improve performance: !list. <a href="!url">Disable modules</a>.', array(
+          '!list' => join(', ', $enabled),
+          '!url' => url('admin/modules'),
+        )),
+        'value' => t('Enabled'),
+        'severity' => REQUIREMENT_WARNING,
+      );
+    }
+
+    // Don't write errors to the screen.
+    if (variable_get('error_level', ERROR_REPORTING_DISPLAY_ALL) != ERROR_REPORTING_HIDE) {
+      $requirements['steindom_deploy_error_level'] = array(
+        'title' => t('Error reporting'),
+        'description' => t('Errors should not be displayed to the screen. <a href="!url">Disable errors</a>.', array(
+          '!url' => url('admin/config/development/logging'),
+        )),
+        'value' => t('Displayed'),
+        'severity' => REQUIREMENT_WARNING,
+      );
+    }
+
+    // Compress and aggregate CSS & JS.
+    if (!variable_get('preprocess_css', FALSE) || variable_get('preprocess_JS', FALSE)) {
+      $requirements['steindom_deploy_css_js'] = array(
+        'title' => t('CSS and JS'),
+        'description' => t('CSS and JS should be aggregated. <a href="!url">Do it</a>.', array(
+          '!url' => url('admin/config/development/performance'),
+        )),
+        'value' => t('Not aggregated'),
+        'severity' => REQUIREMENT_WARNING,
+      );
+    }
+  }
+
+  return $requirements;
+}
