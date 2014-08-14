@@ -35,9 +35,7 @@ class focalPointTest extends PHPUnit_Framework_TestCase {
       array(640, 300, 80, 340),
       array(640, 300, 10, 0),
       array(640, 640, 640, 0),
-      array(640, 800, 50, -80),
-      array(640, 800, 80, -80),
-      array(640, 800, 10, -80),
+      array(640, 800, 50, 0),
     );
   }
 

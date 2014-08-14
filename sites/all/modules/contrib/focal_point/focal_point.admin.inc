@@ -60,7 +60,7 @@ function focal_point_test_drive_form($form, &$form_state) {
         '#style_name' => 'focal_point_preview',
         '#path' => $file->uri,
       ),
-      'focal_point_test_drive_focal_point' => _focal_point_field('test-drive', 0, $focal_point),
+      'focal_point_test_drive_focal_point' => _focal_point_field('test-drive', $focal_point),
     );
   }
 

@@ -17,10 +17,9 @@
         // Set some variables for the different pieces at play.
         var $indicator = $(this);
         var $img = $(this).siblings('img');
-        var $fieldDelta = $(this).attr('data-delta');
-        var $fieldName = $(context).find('#file-entity-add-upload').length > 0 ? 'media' : $(this).attr('data-field-name');
-        var $field = $(".focal-point-" + $fieldName + '-' + $fieldDelta);
-        var $previewLink = $(".focal-point-preview-link-" + $fieldName + '-' + $fieldDelta);
+        var focalPointID = $(this).attr('id');
+        var $field = $('.focal-point[data-focal-point-id="' + focalPointID + '"]', context);
+        var $previewLink = $('.focal-point-preview-link[data-focal-point-id="' + focalPointID + '"]', context);
 
         // Hide the focal_point form item. We do this with js so that a non-js
         // user can still set the focal point values. Also, add functionality so

@@ -73,10 +73,10 @@ function hook_focal_point_default_method_info_alter(&$info) {
  */
 function callback_get_focal_point($image) {
   // Return a random point on the image.
-  return (
+  return ( array(
     mt_rand(0, $image->info['width']),
     mt_rand(0, $image->info['height']),
-  );
+  ));
 }
 
 /**
