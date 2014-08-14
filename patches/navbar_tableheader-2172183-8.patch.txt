@@ -1,0 +1,24 @@
+diff --git a/navbar.module b/navbar.module
+index 7fdc86c..e083e54 100644
+--- a/navbar.module
++++ b/navbar.module
+@@ -745,6 +745,7 @@ function navbar_library() {
+       array('navbar', 'navbar.announce'),
+       array('navbar', 'navbar.displace'),
+       array('navbar', 'navbar.menu'),
++      array('navbar', 'navbar.tableheader'),
+     ),
+   );
+ 
+@@ -900,11 +901,6 @@ function navbar_library_alter(&$libraries, $module) {
+  * Implements hook_js_alter().
+  */
+ function navbar_js_alter(&$javascript) {
+-  // Only load the tableheader offset script if the core tableheader script
+-  // is loaded.
+-  if (isset($javascript['misc/tableheader.js'])) {
+-    drupal_add_library('navbar', 'navbar.tableheader');
+-  }
+ }
+ 
+ /**
