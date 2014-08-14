@@ -32,7 +32,7 @@ function steindom_global_ckeditor_profile_defaults() {
         'toolbar' => '[
     [\'Source\',\'Format\',\'Bold\',\'Italic\',\'-\',\'NumberedList\',\'BulletedList\',\'Outdent\',\'Indent\',\'-\',\'JustifyLeft\',\'JustifyCenter\',\'JustifyRight\'],
     [\'Link\',\'Unlink\'],
-    [\'Image\',\'Table\',\'MediaEmbed\',\'Youtube\',\'Blockquote\']
+    [\'Image\',\'IMCE\',\'Table\',\'MediaEmbed\',\'Youtube\',\'Blockquote\']
 ]',
         'expand' => 't',
         'default' => 't',
@@ -99,6 +99,18 @@ config.autoGrow_maxHeight = 550;',
             'desc' => 'Plugin file: image2',
             'path' => '%plugin_dir_extra%image2/',
             'buttons' => FALSE,
+            'default' => 'f',
+          ),
+          'imce' => array(
+            'name' => 'imce',
+            'desc' => 'Plugin for inserting files from IMCE without image dialog',
+            'path' => '%plugin_dir%imce/',
+            'buttons' => array(
+              'IMCE' => array(
+                'label' => 'IMCE',
+                'icon' => 'images/icon.png',
+              ),
+            ),
             'default' => 'f',
           ),
           'mediaembed' => array(
