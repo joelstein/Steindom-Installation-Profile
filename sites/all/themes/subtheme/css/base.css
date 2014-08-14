@@ -1,0 +1,38 @@
+body {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+/* Responsive images */
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Links */
+
+a {
+  -webkit-transition: all 200ms ease;
+  -moz-transition: all 200ms ease;
+  -o-transition: all 200ms ease;
+  transition: all 200ms ease;
+  color: #0066ff;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #80b3ff;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Image link hover effect */
+
+a img:hover,
+a img:focus {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+  opacity: 0.5;
+}
