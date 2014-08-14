@@ -24,6 +24,7 @@ function steindom_profile_install() {
   // Enable developer modules.
   module_enable(array(
     'devel',
+    'devel_generate',
     'diff',
     'ds_ui',
     'field_ui',
