@@ -14,22 +14,21 @@ function steindom_profile_form_install_configure_form_alter(&$form, $form_state)
   $form['user2'] = array(
     '#type' => 'fieldset',
     '#title' => 'User #2',
-    '#tree' => TRUE,
     '#weight' => 0,
   );
-  $form['user2']['name'] = array(
+  $form['user2']['user2_name'] = array(
     '#type' => 'textfield',
     '#title' => 'Username',
     '#required' => TRUE,
     '#default_value' => 'Joel Stein',
   );
-  $form['user2']['mail'] = array(
+  $form['user2']['user2_mail'] = array(
     '#type' => 'textfield',
     '#title' => 'Email',
     '#required' => TRUE,
     '#default_value' => 'joel@steindom.com',
   );
-  $form['user2']['pass'] = array(
+  $form['user2']['user2_pass'] = array(
     '#type' => 'password',
     '#title' => 'Password',
     '#required' => TRUE,
@@ -48,10 +47,10 @@ function steindom_profile_form_install_configure_form_alter(&$form, $form_state)
 function steindom_profile_finished(&$form, &$form_state) {
   // Save user #2.
   $edit = array(
-    'name' => $form_state['values']['user2']['name'],
-    'pass' => $form_state['values']['user2']['pass'],
-    'mail' => $form_state['values']['user2']['mail'],
-    'init' => $form_state['values']['user2']['mail'],
+    'name' => $form_state['values']['user2_name'],
+    'pass' => $form_state['values']['user2_pass'],
+    'mail' => $form_state['values']['user2_mail'],
+    'init' => $form_state['values']['user2_mail'],
     'timezone' => 'America/Chicago',
     'status' => 1,
     'access' => REQUEST_TIME,
