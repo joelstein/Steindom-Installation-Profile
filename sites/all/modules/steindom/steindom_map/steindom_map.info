@@ -7,7 +7,6 @@ project = steindom_map
 dependencies[] = ctools
 dependencies[] = features
 dependencies[] = fieldable_panels_panes (>1.5)
-dependencies[] = panelizer
 dependencies[] = simple_gmap
 dependencies[] = text
 features[ctools][] = fieldable_panels_panes:fieldable_panels_pane_type:1

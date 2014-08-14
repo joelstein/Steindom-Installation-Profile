@@ -4,8 +4,14 @@
  * Implements hook_install().
  */
 function steindom_profile_install() {
-  // Install Steindom Global and Steindom Page features.
-  module_enable(array('steindom_global', 'steindom_page'));
+  // Install features.
+  module_enable(array(
+    'steindom_global',
+    'steindom_page',
+    'steindom_map',
+    'steindom_image',
+    'steindom_rich_text',
+  ));
 
   // Grant "administrator" role all permissions.
   $admin_role = user_role_load_by_name('administrator');
