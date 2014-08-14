@@ -15,7 +15,7 @@ function steindom_rich_text_default_fieldable_panels_pane_type() {
   $fieldable_panels_pane_type->api_version = 1;
   $fieldable_panels_pane_type->name = 'steindom_rich_text';
   $fieldable_panels_pane_type->title = 'Rich-text';
-  $fieldable_panels_pane_type->description = '';
+  $fieldable_panels_pane_type->description = 'Rich text content.';
   $export['steindom_rich_text'] = $fieldable_panels_pane_type;
 
   return $export;
