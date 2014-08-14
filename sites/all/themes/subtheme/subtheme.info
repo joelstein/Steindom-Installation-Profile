@@ -12,4 +12,6 @@ regions[footer] = Footer
 regions[page_top] = Page top
 regions[page_bottom] = Page bottom
 
+plugins[panels][layouts] = layouts
+
 settings[toggle_logo] = 0

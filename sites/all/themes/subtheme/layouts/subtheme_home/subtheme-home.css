@@ -1,0 +1,31 @@
+.subtheme-home-container {
+  margin-bottom: 1em;
+}
+
+.subtheme-home-sidebar {
+  min-height: 1px;
+  width: 34.043%;
+  float: left;
+}
+
+  .subtheme-home-sidebar-inner {
+    margin-right: 20px;
+  }
+
+.subtheme-home-content {
+  float: left;
+  width: 65.957%;
+}
+
+/* iPhone [portrait + landscape] */
+@media only screen and (max-width: 480px) {
+  .subtheme-home-content,
+  .subtheme-home-sidebar {
+    width: 100%;
+    float: none;
+  }
+  
+  .subtheme-home-sidebar-inner {
+    margin-right: 0;
+  }
+}
