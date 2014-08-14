@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Steindom Map feature.
+ */
+
+include_once 'steindom_map.features.inc';

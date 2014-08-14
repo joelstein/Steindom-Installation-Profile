@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Steindom Image feature.
+ */
+
+include_once 'steindom_image.features.inc';
