@@ -21,6 +21,10 @@ function steindom_profile_install() {
   ckeditor_profile_delete('Advanced');
   ckeditor_profile_delete('Full');
 
+  // Disable Bartik and enable Subtheme.
+  theme_disable(array('bartik'));
+  theme_enable(array('subtheme'));
+
   // Enable developer modules.
   module_enable(array(
     'devel',
