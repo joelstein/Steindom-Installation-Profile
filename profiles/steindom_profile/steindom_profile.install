@@ -27,6 +27,7 @@ function steindom_profile_install() {
     'diff',
     'ds_ui',
     'field_ui',
+    'search_krumo',
     'views_ui',
   ));
 }
