@@ -31,6 +31,17 @@ function steindom_global_user_default_permissions() {
     'module' => 'navbar',
   );
 
+  // Exported permission: 'access ping'.
+  $permissions['access ping'] = array(
+    'name' => 'access ping',
+    'roles' => array(
+      'administrator' => 'administrator',
+      'anonymous user' => 'anonymous user',
+      'authenticated user' => 'authenticated user',
+    ),
+    'module' => 'ping',
+  );
+
   // Exported permission: 'use text format filtered_html'.
   $permissions['use text format filtered_html'] = array(
     'name' => 'use text format filtered_html',
