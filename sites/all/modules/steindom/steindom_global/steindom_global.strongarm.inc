@@ -36,6 +36,20 @@ function steindom_global_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'boost_cacheability_pages';
+  $strongarm->value = 'ping';
+  $export['boost_cacheability_pages'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'boost_lifetime_max_text/html';
+  $strongarm->value = '86400';
+  $export['boost_lifetime_max_text/html'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'cron_safe_threshold';
   $strongarm->value = '0';
   $export['cron_safe_threshold'] = $strongarm;
