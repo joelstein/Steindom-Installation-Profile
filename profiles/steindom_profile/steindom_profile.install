@@ -31,6 +31,11 @@ function steindom_profile_install() {
   theme_disable(array('bartik'));
   theme_enable(array('subtheme'));
 
+  // Delete default Fieldable Panels Pane.
+  ctools_include('export');
+  $object = ctools_export_crud_load('fieldable_panels_pane_type', 'fieldable_panels_pane');
+  ctools_export_crud_delete('fieldable_panels_pane_type', $object);
+
   // Enable developer modules.
   module_enable(array(
     'devel',
