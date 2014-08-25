@@ -36,6 +36,20 @@ function steindom_global_strongarm() {
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
+  $strongarm->name = 'advagg_js_compressor';
+  $strongarm->value = '1';
+  $export['advagg_js_compressor'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'advagg_js_inline_compressor';
+  $strongarm->value = '1';
+  $export['advagg_js_inline_compressor'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
   $strongarm->name = 'boost_cacheability_pages';
   $strongarm->value = 'ping';
   $export['boost_cacheability_pages'] = $strongarm;
